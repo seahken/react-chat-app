@@ -1,8 +1,8 @@
-import { createContext, useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../App";
 
 const SiteHeader = () => {
-    const { userId, userName, currentRoomId } = useContext(AuthContext)
+    const { currentRoomId } = useContext(AuthContext)
 
     return (
         <>
