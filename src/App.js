@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect, createContext } from 'react';
+
 import './styles/main.scss';
+import SiteHeader from './components/SiteHeader';
+import SignIn from './components/SignIn';
+import ChatRoom from './components/ChatRoom';
+
+export const AuthContext = createContext();
 
 function App() {
+  const [userId, setUserId] = useState(undefined)
+  const [userName, setUserName] = useState(undefined)
+  const [currentRoomId, setCurrentRoomId] = useState(undefined)
+
+  useEffect(() => {
+    setUserId(localStorage.getItem('userId'));
+    setUserName(localStorage.getItem('userName'));
+    setCurrentRoomId(localStorage.getItem('currentRoomId'));
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider value={{ userId, userName, currentRoomId }}>
+      <div className="App">
+        <SiteHeader />
+        {
+          currentRoomId
+            ?
+            <ChatRoom />
+            :
+            <SignIn />
+        }
+      </div>
+    </AuthContext.Provider>
   );
 }
 
