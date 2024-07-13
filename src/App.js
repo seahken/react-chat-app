@@ -8,9 +8,9 @@ import ChatRoom from './components/ChatRoom';
 export const AuthContext = createContext();
 
 function App() {
-  const [userId, setUserId] = useState(undefined)
-  const [userName, setUserName] = useState(undefined)
-  const [currentRoomId, setCurrentRoomId] = useState(undefined)
+  const [userId, setUserId] = useState('')
+  const [userName, setUserName] = useState('')
+  const [currentRoomId, setCurrentRoomId] = useState('')
 
   useEffect(() => {
     setUserId(localStorage.getItem('userId'));
@@ -19,7 +19,7 @@ function App() {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ userId, userName, currentRoomId }}>
+    <AuthContext.Provider value={{ userId, userName, currentRoomId, setCurrentRoomId }}>
       <div className="App">
         <SiteHeader />
         {
