@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 import { db } from '../base/firebase';
 
 const SignIn = () => {
-    const { userId, setCurrentRoomId } = useContext(AuthContext)
+    const { userId, setCurrentRoomId, setUserId, setUserName } = useContext(AuthContext)
     const [formData, setFormData] = useState({
         userName: '',
         roomId: ''
@@ -52,11 +52,16 @@ const SignIn = () => {
             createdAt: serverTimestamp()
         })
 
+        const newUserId = userId || v4()
+
         setLocalStorage({
-            userId: userId || v4(),
+            userId: newUserId,
             userName: formData.userName,
             roomId: newRoomId
         })
+
+        setUserId(newUserId)
+        setUserName(formData.userName)
 
         setCurrentRoomId(newRoomId)
     }
@@ -71,13 +76,19 @@ const SignIn = () => {
             console.log(`enter room ${roomId}`)
         } else {
             alert('no such room exists!')
+            return
         }
 
+        const newUserId = userId || v4()
+
         setLocalStorage({
-            userId: userId || v4(),
+            userId: newUserId,
             userName: formData.userName,
             roomId: roomId
         })
+
+        setUserId(newUserId)
+        setUserName(formData.userName)
 
         setCurrentRoomId(roomId)
     }
@@ -104,21 +115,31 @@ const SignIn = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log('formData', formData)
+        console.log(e.target.userName)
+        if (name === 'userName' & value !== formData.name) {
+            console.log(e.target.userName)
+            setUserId('')
+        }
         setFormData((prevState) => ({ ...prevState, [name]: value }))
+
     }
 
     return (
-        <article>
+        <article className="sign-in">
             <h1>Sigin</h1>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="userName">Name</label>
-                <input id="userName" name="userName" type="text" placeholder="Enter Name" value={formData.userName} onChange={handleChange} />
+                <div className="sign-in__form">
+                    <div className="sign-in__form-group">
+                        <input id="userName" name="userName" type="text" placeholder="Enter Name" value={formData.userName} onChange={handleChange} />
+                    </div>
 
-                <label htmlFor="roomId">Room ID</label>
-                <input id="roomId" name="roomId" type="text" value={formData.roomId} onChange={handleChange} />
-
-                <button type="submit">{actionType()} Room</button>
-
+                    <div className="sign-in__form-group">
+                        <input id="roomId" name="roomId" type="text" placeholder="Room ID" value={formData.roomId} onChange={handleChange} />
+                    </div>
+                    <button type="submit">{actionType()} Room</button>
+                </div>
+                
             </form>
         </article>
     )

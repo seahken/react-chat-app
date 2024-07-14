@@ -19,7 +19,7 @@ function App() {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ userId, userName, currentRoomId, setCurrentRoomId }}>
+    <AuthContext.Provider value={{ userId, userName, currentRoomId, setCurrentRoomId, setUserId, setUserName }}>
       <div className="App">
         <SiteHeader />
         {

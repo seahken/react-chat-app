@@ -1,0 +1,33 @@
+.sign-in {
+    &__form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: auto auto 2rem;
+        flex-wrap: wrap;
+        border: 1px black solid;
+        border-radius: 8px;
+        padding: 1rem;
+        max-width: 360px;
+
+        > button {
+            margin-top: 1rem;
+            background-color: white;
+            border-radius: 4px;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+
+    &__form-group {
+        margin: 0 0 0.4rem;
+
+        > label {
+            margin-right: 1rem;
+        }
+
+        > input {
+            padding: 0.4rem 0.8rem;
+        }
+    }
+}

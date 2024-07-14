@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { useContext } from "react";
 import { AuthContext } from "../App";
 
 const SiteHeader = () => {
@@ -20,7 +19,7 @@ const SiteHeader = () => {
                 </header>
                 :
                 <header>
-                    <button>Create Room</button>
+                    {/* <button>Create Room</button> */}
                 </header>
             }
         </>
