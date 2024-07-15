@@ -1,5 +1,12 @@
 @import './components/app.scss';
 @import './components/SignIn.scss';
+@import './components/SiteHeader.scss';
+@import './components/ChatRoom.scss';
+@import './components/ChatBox.scss';
+
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
@@ -8,9 +15,30 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    color: white;
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
+}
+
+button {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    color: #242443;
+    border: 1px solid #7cc5d9;
+    background-color: #7cc5d9;
+    font-weight: 600;
+    cursor: pointer;
 }

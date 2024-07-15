@@ -15,6 +15,7 @@ const SiteHeader = () => {
                 ?
                 <header className="site-header">
                     <button onClick={() => leaveRoom()}>Leave Room</button>
+                    <h1>ChatRoom</h1>
                     <p>Room Id: {currentRoomId}</p>
                 </header>
                 :

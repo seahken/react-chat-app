@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { addDoc, collection, getDocs, doc, getDoc, query, where, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where, serverTimestamp } from "firebase/firestore";
 import { AuthContext } from "../App";
 import { v4 } from "uuid";
 
@@ -7,6 +7,7 @@ import { db } from '../base/firebase';
 
 const SignIn = () => {
     const { userId, setCurrentRoomId, setUserId, setUserName } = useContext(AuthContext)
+    const [ isLoading, setIsLoading ] = useState(false)
     const [formData, setFormData] = useState({
         userName: '',
         roomId: ''
@@ -23,11 +24,9 @@ const SignIn = () => {
         return formData.roomId === '' ? 'Create' : 'Enter'
     }
 
-    const isRoomExists = async (roomId) => {
-        const q = query(collection(db, "rooms"), where("roomId", "==", roomId));
-        const querySnapshot = await getDocs(q);
-
-        return querySnapshot.docs.length > 0
+    const buttonDisplayText = () => {
+        if (isLoading) return formData.roomId === '' ? 'Creating Room...' : 'Entering Room...'
+        return formData.roomId === '' ? 'Create Room' : 'Enter Room'
     }
 
     const getRoomId = () => {
@@ -42,6 +41,14 @@ const SignIn = () => {
         }
 
         return roomId
+    }
+
+    const wait = (ms) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve()
+            }, ms)
+        })
     }
 
     const createRoom = async () => {
@@ -70,7 +77,6 @@ const SignIn = () => {
         const roomId = formData.roomId.toLocaleUpperCase()
         const q = query(collection(db, "rooms"), where("roomId", "==", roomId));
         const querySnapshot = await getDocs(q);
-        console.log(querySnapshot)
 
         if (querySnapshot.docs.length > 0) {
             console.log(`enter room ${roomId}`)
@@ -101,6 +107,8 @@ const SignIn = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setIsLoading(true)
+        await wait(500)
         if (formData.userName === '') {
             alert('Username cannot be empty')
             return
@@ -111,6 +119,8 @@ const SignIn = () => {
         } else {
             await enterRoom()
         }
+        
+        setIsLoading(false)
     }
 
     const handleChange = (e) => {
@@ -126,22 +136,22 @@ const SignIn = () => {
     }
 
     return (
-        <article className="sign-in">
-            <h1>Sigin</h1>
+        <div className="sign-in">
+            <h1>Sign In</h1>
             <form onSubmit={handleSubmit}>
                 <div className="sign-in__form">
                     <div className="sign-in__form-group">
-                        <input id="userName" name="userName" type="text" placeholder="Enter Name" value={formData.userName} onChange={handleChange} />
+                        <input id="userName" name="userName" type="text" placeholder="ENTER NAME" value={formData.userName} onChange={handleChange} />
                     </div>
 
                     <div className="sign-in__form-group">
                         <input id="roomId" name="roomId" type="text" placeholder="Room ID" value={formData.roomId} onChange={handleChange} />
                     </div>
-                    <button type="submit">{actionType()} Room</button>
+                    <button type="submit">{buttonDisplayText()}</button>
                 </div>
                 
             </form>
-        </article>
+        </div>
     )
 }
 

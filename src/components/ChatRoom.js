@@ -1,6 +1,6 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { AuthContext } from "../App";
-import { getDocs, query, collection, where, addDoc, serverTimestamp, onSnapshot, QuerySnapshot } from 'firebase/firestore'
+import { getDocs, query, collection, where, addDoc, serverTimestamp, onSnapshot, orderBy } from 'firebase/firestore'
 
 import { db } from '../base/firebase';
 import ChatBox from "./ChatBox";
@@ -10,6 +10,7 @@ const ChatRoom = () => {
     const [chats, setChats] = useState([])
     const [chatMessage, setChatMessage] = useState('')
     const [roomId, setRoomId] = useState('')
+    const scroll = useRef();
 
     useEffect(() => {
 
@@ -21,7 +22,10 @@ const ChatRoom = () => {
             const roomId = querySnapshot.docs[0].id
             setRoomId(roomId)
 
-            const qChats = query(collection(db, `/rooms/${roomId}/chats`));
+            const qChats = query(
+                collection(db, `/rooms/${roomId}/chats`),
+                orderBy("createdAt", "asc")
+            );
 
             const unsubscribe = onSnapshot(qChats, (QuerySnapshot) => {
                 const chatArray = []
@@ -29,8 +33,12 @@ const ChatRoom = () => {
                     chatArray.push({ ...doc.data(), id: doc.id })
                 })
 
-                const sortedMessages = chatArray.sort((a, b) => a.createdAt - b.createdAt)
-                setChats(namesModifier(renderedMessages(sortedMessages)))
+                const renderedChats = namesModifier(renderedMessages(chatArray))
+                setTimeout(() => {
+
+                    setChats(renderedChats)
+                },500)
+
             })
             return () => unsubscribe
         }
@@ -55,6 +63,7 @@ const ChatRoom = () => {
         })
 
         setChatMessage('')
+        scroll.current.scrollIntoView({ behavior: "smooth" });
     }
 
     const renderedMessages = (messages) => {
@@ -66,7 +75,7 @@ const ChatRoom = () => {
                     ...messages[i],
                     messages: [messages[i].text]
                 })
-            } else if (messages[i].userId === messages[i-1].userId) {
+            } else if (messages[i].userId === messages[i - 1].userId) {
                 messageArray[messageArray.length - 1].messages.push(messages[i].text)
             } else {
                 messageArray.push({
@@ -93,22 +102,30 @@ const ChatRoom = () => {
                 ...message,
                 name: `${message.name} (${occurrence})`
             }
-        })        
+        })
     }
 
     return (
-        <>
-            <h1>ChatRoom</h1>
-            {
-                chats.map((chat, index) => {
-                    return <ChatBox key={chat.id} displayName={chat.name} messages={chat.messages} />
-                })
-            }
+        <div className="chat-room">
+            <div>
+                <ul className="chat-room__chats">
+                    {
+                        chats.map((chat, index) => {
+                            return <ChatBox key={chat.id} displayName={chat.name} messages={chat.messages} chatUserId={chat.userId} />
+                        })
+                    }
+                </ul>
+            </div>
+
+
             <form onSubmit={handleSubmit}>
-                <input type="text" value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} />
-                <button type="submit">Send</button>
+                <span ref={scroll}></span>
+                <div className="chat-room__input-group">
+                    <input type="text" className="chat-room__input" value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} />
+                    <button type="submit" className="chat-room__button">Send</button>
+                </div>
             </form>
-        </>
+        </div>
 
 
     )

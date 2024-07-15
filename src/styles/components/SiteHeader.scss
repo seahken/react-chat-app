@@ -1,3 +1,14 @@
 .site-header {
-    
+    padding: 1rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #4c768d;
+    color: #242443;
+    height: 60px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1;
 }

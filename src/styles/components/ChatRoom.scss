@@ -1,0 +1,39 @@
+.chat-room {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: calc(100vh - 5rem);
+
+
+    &__chats {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        padding: 5rem 0 ;
+    }
+
+    &__input-group {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        padding: 0 1rem;
+    }
+
+    &__input {
+        flex: 1 0 auto;
+        padding: 0.4rem 0.8rem;
+        border: 1px solid #fff;
+        border-radius: 20px 0 0 20px;
+        color: #fff;
+        flex: 1 1 auto;
+        font-size: 1.6rem;
+        font-weight: 300;
+        padding: 10px 20px;
+        background-color: black;
+    }
+
+    &__button {
+        border-radius: 0 20px 20px 0;        
+    }
+}
